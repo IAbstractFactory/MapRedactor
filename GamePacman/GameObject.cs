@@ -11,6 +11,7 @@ namespace GamePacman
     [Serializable]
     public abstract class GameObject
     {
+        public bool Selected { get; set; } = false;
         public int X { get; set; }
         public int Y { get; set; }
         public int Width { get; set; }
@@ -20,6 +21,7 @@ namespace GamePacman
         public GameObject() { }
         public GameObject(int x, int y, int width, int height)
         {
+            
             X = x;
             Y = y;
             Width = width;

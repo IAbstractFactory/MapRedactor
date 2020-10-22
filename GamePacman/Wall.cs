@@ -14,13 +14,17 @@ namespace GamePacman
         public Wall(int x, int y, int height, int width, Color color) : base(x, y, width, height)
         {
             this.color = color;
-           
+
         }
         public Wall() : base() { }
 
         public override void Show(Graphics g)
         {
-            Pen pen = new Pen(color, 2);
+            Pen pen;
+            if (Selected)
+                pen = new Pen(Color.Aqua, 2);
+            else
+                pen = new Pen(color, 2);
             g.DrawLine(pen, X - Width / 2, Y - Height / 2, X + Width / 2, Y - Height / 2);
             g.DrawLine(pen, X - Width / 2, Y + Height / 2, X + Width / 2, Y + Height / 2);
             g.DrawLine(pen, X - Width / 2, Y - Height / 2, X - Width / 2, Y + Height / 2);

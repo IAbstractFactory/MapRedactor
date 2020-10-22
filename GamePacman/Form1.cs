@@ -44,12 +44,10 @@ namespace GamePacman
             field.Show(e.Graphics);
             e.Graphics.DrawRectangle(new Pen(Color.Black, 1), selectedRegion);
             CursorImage?.Draw(e.Graphics);
-        }
-
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {
 
         }
+
+
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -96,8 +94,13 @@ namespace GamePacman
         {
 
             Settings settings = new Settings();
-            settings.coins = field.coins;
-            settings.walls = field.walls;
+            foreach (var obj in field.gameObjects)
+            {
+                if (obj is Coin)
+                    settings.coins.Add(obj);
+                if (obj is Wall)
+                    settings.walls.Add(obj);
+            }
             settings.fildHeight = field.Height;
             settings.fildWidt = field.Width;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -203,22 +206,104 @@ namespace GamePacman
 
                 selected = false;
 
-                for (var i = 0; i < field.coins.Count; i++)
+                for (var i = 0; i < field.gameObjects.Count; i++)
                 {
-                    if (selectedRegion.Contains(field.coins[i].X, field.coins[i].Y))
-                        field.coins[i].Color = Color.Red;
+                    if (selectedRegion.Contains(field.gameObjects[i].X, field.gameObjects[i].Y))
+                        field.gameObjects[i].Selected = true;
                     else
-                        field.coins[i].Color = Color.Gold;
+                        field.gameObjects[i].Selected = false;
 
 
-                } 
+                }
                 selectedRegion = new Rectangle();
+                // label1.Focus();
                 Refresh();
             }
         }
-        private bool Contains(Rectangle rectangle, int x, int y)
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            return x >= rectangle.X && x <= rectangle.X + rectangle.Width && y >= rectangle.Y && y <= rectangle.Y + rectangle.Height;
+            if (e.KeyData == Keys.Up)
+            {
+                for (int i = 0; i < field.gameObjects.Count; i++)
+                {
+                    if (field.gameObjects[i].Selected)
+                    {
+                        field.gameObjects[i].Y--;
+                    }
+                }
+            }
+            if (e.KeyCode == Keys.Delete)
+            {
+                while (field.SelectedCount != 0)
+                    for (int i = 0; i < field.gameObjects.Count; i++)
+                    {
+                        if (field.gameObjects[i].Selected)
+                        {
+                            field.gameObjects.Remove(field.gameObjects[i]);
+                        }
+                    }
+            }
+            if (e.KeyData == Keys.Left)
+            {
+                for (int i = 0; i < field.gameObjects.Count; i++)
+                {
+                    if (field.gameObjects[i].Selected)
+                    {
+                        field.gameObjects[i].X--;
+                    }
+                }
+            }
+            if (e.KeyData == Keys.Down)
+            {
+                for (int i = 0; i < field.gameObjects.Count; i++)
+                {
+                    if (field.gameObjects[i].Selected)
+                    {
+                        field.gameObjects[i].Y++;
+                    }
+                }
+            }
+            if (e.KeyData == Keys.Right)
+            {
+                for (int i = 0; i < field.gameObjects.Count; i++)
+                {
+                    if (field.gameObjects[i].Selected)
+                    {
+                        field.gameObjects[i].X++;
+                    }
+                }
+            }
+
+            Refresh();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            foreach (var control in this.Controls.OfType<Button>())
+            {
+                control.PreviewKeyDown += Control_PreviewKeyDown;
+            }
+            foreach (var control in this.Controls.OfType<TrackBar>())
+            {
+                control.PreviewKeyDown += Control_PreviewKeyDown;
+            }
+        }
+
+        private void Control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                case Keys.Left:
+                case Keys.Down:
+                case Keys.Right:
+                    e.IsInputKey = true;
+                    break;
+                default:
+                    break;
+
+            }
         }
     }
 }

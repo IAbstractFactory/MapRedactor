@@ -18,6 +18,9 @@ namespace GamePacman
         }
         public override void Show(Graphics g)
         {
+            if(Selected)
+                g.DrawEllipse(new Pen(Color.Aqua, 4), X - Width / 2, Y - Height / 2, Width, Height);
+            else
             g.DrawEllipse(new Pen(Color, 4), X - Width / 2, Y - Height / 2, Width, Height);
 
         }

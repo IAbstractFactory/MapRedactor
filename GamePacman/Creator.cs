@@ -8,6 +8,7 @@ namespace GamePacman
 {
     public abstract class Creator
     {
-        public abstract GameObject Create(int x, int y,int size);
+        public abstract GameObject Create(int x, int y, int size);
+        
     }
 }

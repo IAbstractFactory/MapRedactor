@@ -9,6 +9,11 @@ namespace GamePacman
     [Serializable]
     public class Settings
     {
+        public Settings() 
+        {
+            coins = new List<GameObject>();
+            walls = new List<GameObject>();
+        }
         public List<GameObject> coins;
         public List<GameObject> walls;
         public int fildWidt;
