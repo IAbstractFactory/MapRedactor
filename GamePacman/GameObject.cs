@@ -15,6 +15,7 @@ namespace GamePacman
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get;set; }
+        public Color Color { get; set; }
         public Bitmap Texture { get; protected set; }
         public GameObject() { }
         public GameObject(int x, int y, int width, int height)

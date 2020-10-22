@@ -14,11 +14,11 @@ namespace GamePacman
         public Coin() : base() { }
         public Coin(int x, int y, int height, int width) : base(x, y, width, height)
         {
-
+            Color = Color.Gold;
         }
         public override void Show(Graphics g)
         {
-            g.DrawEllipse(new Pen(Color.Gold, 4), X - Width / 2, Y - Height / 2, Width, Height);
+            g.DrawEllipse(new Pen(Color, 4), X - Width / 2, Y - Height / 2, Width, Height);
 
         }
     }

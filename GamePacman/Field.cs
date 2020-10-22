@@ -19,6 +19,7 @@ namespace GamePacman
         public Creator creator { get; set; }
         public List<GameObject> coins { get; private set; }
         public List<GameObject> walls { get; private set; }
+        public List<GameObject> gameObjects { get; private set; }
         public int Width { get; set; } = 500;
         public int Height { get; set; } = 400;
         public Field(Pacman pacman)
@@ -35,6 +36,7 @@ namespace GamePacman
         }
         public void Add(int x, int y)
         {
+            //walls.Add(creator.Create(x, y,c);
             if (creator is CoinCreator) coins.Add(creator.Create(x, y, 5));
             if (creator is WallCreator) walls.Add(creator.Create(x, y, WallSize));
         }
