@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace GamePacman
 {
-    public class Field
+    public class Field:ICloneable
     {
 
         Pacman pacman;
@@ -74,6 +74,22 @@ namespace GamePacman
             g.DrawLine(new Pen(Color.Red, 2), 0, 0, 0, Height);
             g.DrawLine(new Pen(Color.Red, 2), 0, Height, Width, Height);
             g.DrawLine(new Pen(Color.Red, 2), Width, 0, Width, Height);
+        }
+
+        public object Clone()
+        {
+            Field field = new Field();
+            field.Width = this.Width;
+            field.Height = this.Height;
+            field.WallSize = this.WallSize;
+            field.creator = this.creator;
+            field.Color = this.Color;
+            for(int i = 0; i < this.gameObjects.Count; i++)
+            {
+                field.gameObjects.Add(this.gameObjects[i].Clone() as GameObject);
+            }
+
+            return field;
         }
     }
 }

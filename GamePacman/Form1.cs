@@ -18,6 +18,7 @@ namespace GamePacman
     {
         CursorImage CursorImage;
         Field field;
+        Stack<Field> ctrlZLUL;
         Rectangle selectedRegion;
         Point pointStart;
         List<GameObject> buffer;
@@ -25,6 +26,7 @@ namespace GamePacman
         Color activeColor;
         public Form1()
         {
+            ctrlZLUL = new Stack<Field>();
             InitializeComponent();
             standartColor = this.BackColor;
             activeColor = Color.Red;
@@ -65,7 +67,11 @@ namespace GamePacman
             else
             {
                 if (!(e.X > field.Width || e.Y > field.Height))
+                {
+                    ctrlZLUL.Push(field.Clone() as Field);
                     field.Add(e.X, e.Y);
+                }
+
                 Refresh();
             }
         }
@@ -228,7 +234,19 @@ namespace GamePacman
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyData == (Keys.Control | Keys.A))
+            if (e.KeyData == (Keys.Control | Keys.Z))
+            {
+                if (ctrlZLUL.Count != 0)
+                {
+                    ctrlZLUL.Peek().Width = field.Width;
+                    ctrlZLUL.Peek().Height = field.Height;
+
+                    field = ctrlZLUL.Pop();
+                }
+                Refresh();
+
+            }
+            if (e.KeyData == (Keys.Control | Keys.A))
             {
                 foreach (var i in field.gameObjects) i.Selected = true;
             }
@@ -245,6 +263,7 @@ namespace GamePacman
             }
             if (e.KeyData == (Keys.Control | Keys.V))
             {
+                ctrlZLUL.Push(field.Clone() as Field);
                 int deltaX = (PointToClient(Cursor.Position).X - buffer[0].X);
                 int deltaY = (PointToClient(Cursor.Position).Y - buffer[0].Y);
                 for (int i = 0; i < buffer.Count; i++)
@@ -264,6 +283,7 @@ namespace GamePacman
 
             if (e.KeyCode == Keys.Delete)
             {
+                ctrlZLUL.Push(field.Clone() as Field);
                 while (field.SelectedCount != 0)
                     for (int i = 0; i < field.gameObjects.Count; i++)
                     {
@@ -275,6 +295,7 @@ namespace GamePacman
             }
             if (e.KeyData == Keys.Up)
             {
+                ctrlZLUL.Push(field.Clone() as Field);
                 for (int i = 0; i < field.gameObjects.Count; i++)
                 {
                     if (field.gameObjects[i].Selected)
@@ -285,6 +306,7 @@ namespace GamePacman
             }
             if (e.KeyData == Keys.Left)
             {
+                ctrlZLUL.Push(field.Clone() as Field);
                 for (int i = 0; i < field.gameObjects.Count; i++)
                 {
                     if (field.gameObjects[i].Selected)
@@ -295,6 +317,7 @@ namespace GamePacman
             }
             if (e.KeyData == Keys.Down)
             {
+                ctrlZLUL.Push(field.Clone() as Field);
                 for (int i = 0; i < field.gameObjects.Count; i++)
                 {
                     if (field.gameObjects[i].Selected)
@@ -305,6 +328,7 @@ namespace GamePacman
             }
             if (e.KeyData == Keys.Right)
             {
+                ctrlZLUL.Push(field.Clone() as Field);
                 for (int i = 0; i < field.gameObjects.Count; i++)
                 {
                     if (field.gameObjects[i].Selected)
