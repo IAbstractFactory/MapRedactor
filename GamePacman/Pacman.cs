@@ -51,7 +51,10 @@ namespace GamePacman
             x = k1 * speed;
             y = k2 * speed;
         }
-        
-        
+
+        public override object Clone()
+        {
+            return new Pacman(this.X, this.Y, this.Width, this.Height);
+        }
     }
 }

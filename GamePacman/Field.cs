@@ -16,6 +16,7 @@ namespace GamePacman
         Pacman pacman;
         public int WallSize { get; set; } = 10;
         public int CoinsSize { get; private set; } = 5;
+        public Color Color { get; private set; }
         public Creator creator { get; set; }
         public List<GameObject> gameObjects { get; private set; }
         public int Width { get; set; } = 500;
@@ -24,11 +25,12 @@ namespace GamePacman
         {
             this.pacman = pacman;
             gameObjects = new List<GameObject>();
-
+            Color = Color.Blue;
         }
         public Field()
         {
             gameObjects = new List<GameObject>();
+            Color = Color.Blue;
 
         }
         public void Add(int x, int y)
@@ -46,7 +48,7 @@ namespace GamePacman
             get
             {
                 int k = 0;
-                for(int i = 0; i < gameObjects.Count; i++)
+                for (int i = 0; i < gameObjects.Count; i++)
                 {
                     if (gameObjects[i].Selected)
                     {
@@ -58,14 +60,14 @@ namespace GamePacman
             private set { }
         }
 
-        
+
 
         public void Show(Graphics g)
         {
-
+            g.FillRectangle(new SolidBrush(Color), 0, 0, Width, Height);
             foreach (var obj in gameObjects)
             {
-                obj.Show(g);
+                if (!(obj.X > this.Width || obj.Y > this.Height)) obj.Show(g);
             }
 
             g.DrawLine(new Pen(Color.Red, 2), 0, 0, Width, 0);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace GamePacman
 {
     [Serializable]
-    public abstract class GameObject
+    public abstract class GameObject:ICloneable
     {
         public bool Selected { get; set; } = false;
         public int X { get; set; }
@@ -50,5 +51,10 @@ namespace GamePacman
         {
             g.DrawImage(Texture, new Rectangle(X - Width / 2, Y - Height / 2, Width, Height));
         }
+
+        public abstract object Clone();
+        
+            
+        
     }
 }

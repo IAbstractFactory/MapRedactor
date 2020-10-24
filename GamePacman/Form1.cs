@@ -20,11 +20,15 @@ namespace GamePacman
         Field field;
         Rectangle selectedRegion;
         Point pointStart;
-        bool selected = false;
+        List<GameObject> buffer;
+        Color standartColor;
+        Color activeColor;
         public Form1()
         {
             InitializeComponent();
-
+            standartColor = this.BackColor;
+            activeColor = Color.Red;
+            buffer = new List<GameObject>();
             CursorImage = new CursorImage();
             CursorImage.GameObject = new Wall(0, 0, trackBar1.Value, trackBar1.Value, Color.Red);
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
@@ -60,7 +64,8 @@ namespace GamePacman
             }
             else
             {
-                field.Add(e.X, e.Y);
+                if (!(e.X > field.Width || e.Y > field.Height))
+                    field.Add(e.X, e.Y);
                 Refresh();
             }
         }
@@ -68,9 +73,9 @@ namespace GamePacman
         private void label1_MouseDown(object sender, MouseEventArgs e)
         {
             Label label = sender as Label;
-            label2.BackColor = Color.Blue;
-            label3.BackColor = Color.Blue;
-            label.BackColor = Color.Red;
+            label2.BackColor = standartColor;
+            label3.BackColor = standartColor;
+            label.BackColor = activeColor;
 
             field.creator = new CoinCreator();
             CursorImage.GameObject = new Coin();
@@ -81,9 +86,9 @@ namespace GamePacman
         private void label2_Click(object sender, EventArgs e)
         {
             Label label = sender as Label;
-            label1.BackColor = Color.Blue;
-            label3.BackColor = Color.Blue;
-            label.BackColor = Color.Red;
+            label1.BackColor = standartColor;
+            label3.BackColor = standartColor;
+            label.BackColor = activeColor;
             field.creator = new WallCreator();
             CursorImage.GameObject = new Wall(0, 0, field.WallSize, field.WallSize, Color.Red);
             Refresh();
@@ -143,6 +148,7 @@ namespace GamePacman
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
+
             if (CursorImage.GameObject != null)
             {
                 CursorImage.GameObject.X = e.X;
@@ -158,7 +164,7 @@ namespace GamePacman
                     var y = e.Y - pointStart.Y > 0 ? pointStart.Y : e.Y;
 
                     selectedRegion = new Rectangle(x, y, size1, size2);
-                    selected = true;
+
                 }
             }
 
@@ -191,9 +197,9 @@ namespace GamePacman
         private void label3_MouseDown(object sender, MouseEventArgs e)
         {
             Label label = sender as Label;
-            label1.BackColor = Color.Blue;
-            label2.BackColor = Color.Blue;
-            label.BackColor = Color.Red;
+            label1.BackColor = standartColor;
+            label2.BackColor = standartColor;
+            label.BackColor = activeColor;
             field.creator = null;
             CursorImage.GameObject = null;//TODO: Сделать адекватно
             Refresh();
@@ -204,7 +210,6 @@ namespace GamePacman
             if (CursorImage.GameObject == null)
             {
 
-                selected = false;
 
                 for (var i = 0; i < field.gameObjects.Count; i++)
                 {
@@ -223,16 +228,40 @@ namespace GamePacman
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Up)
+            if(e.KeyData == (Keys.Control | Keys.A))
             {
+                foreach (var i in field.gameObjects) i.Selected = true;
+            }
+            if (e.KeyData == (Keys.Control | Keys.C))
+            {
+                buffer.Clear();
                 for (int i = 0; i < field.gameObjects.Count; i++)
                 {
                     if (field.gameObjects[i].Selected)
                     {
-                        field.gameObjects[i].Y--;
+                        buffer.Add(field.gameObjects[i].Clone() as GameObject);
                     }
                 }
             }
+            if (e.KeyData == (Keys.Control | Keys.V))
+            {
+                int deltaX = (PointToClient(Cursor.Position).X - buffer[0].X);
+                int deltaY = (PointToClient(Cursor.Position).Y - buffer[0].Y);
+                for (int i = 0; i < buffer.Count; i++)
+                {
+
+                    buffer[i].X += deltaX;
+                    buffer[i].Y += deltaY;
+
+
+
+
+
+                    field.gameObjects.Add(buffer[i].Clone() as GameObject);
+                }
+                Refresh();
+            }
+
             if (e.KeyCode == Keys.Delete)
             {
                 while (field.SelectedCount != 0)
@@ -243,6 +272,16 @@ namespace GamePacman
                             field.gameObjects.Remove(field.gameObjects[i]);
                         }
                     }
+            }
+            if (e.KeyData == Keys.Up)
+            {
+                for (int i = 0; i < field.gameObjects.Count; i++)
+                {
+                    if (field.gameObjects[i].Selected)
+                    {
+                        field.gameObjects[i].Y--;
+                    }
+                }
             }
             if (e.KeyData == Keys.Left)
             {

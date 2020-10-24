@@ -30,5 +30,10 @@ namespace GamePacman
             g.DrawLine(pen, X - Width / 2, Y - Height / 2, X - Width / 2, Y + Height / 2);
             g.DrawLine(pen, X + Width / 2, Y - Height / 2, X + Width / 2, Y + Height / 2);
         }
+
+        public override object Clone()
+        {
+            return new Wall(X, Y, Height, Width, color);
+        }
     }
 }

@@ -16,6 +16,12 @@ namespace GamePacman
         {
             Color = Color.Gold;
         }
+
+        public override object Clone()
+        {
+            return new Coin(X, Y, Height, Width);
+        }
+
         public override void Show(Graphics g)
         {
             if(Selected)
